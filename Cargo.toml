@@ -1,0 +1,36 @@
+[package]
+name = "find-subimage"
+description = "A rust crate to find a subimage within a larger image"
+version = "0.1.8"
+edition = "2021"
+license = "MIT OR Apache-2.0 OR BSL-1.0 OR MPL-2.0 OR Zlib OR Unlicense"
+homepage = "https://github.com/nico-abram/find-subimage/"
+repository = "https://github.com/nico-abram/find-subimage/"
+documentation = "https://docs.rs/find-subimage"
+readme = "README.md"
+keywords = ["subimage", "match", "find", "position", "processing"]
+categories = ["algorithms", "graphics", "multimedia::images", "multimedia"]
+include = ["/src", "/examples", "LICENSE"]
+
+[dependencies]
+opencv = { version = "0.61", optional = true }
+simdeez = { version = "1.0.7", optional = true }
+
+[features]
+default = ["simdeez", "simdeez-default-new"]
+# This changes the default backend from ::new() to return simdeez
+simdeez-default-new = []
+# This enables checked indexing for some operations in the simdeez implementation
+# Should only be needed when debugging issues
+checked-simdeez = []
+docs-only = ["opencv/docs-only"]
+
+# For examples
+[dev-dependencies]
+image = "0.23"
+
+[package.metadata.docs.rs]
+features = ["opencv", "docs-only"]
+
+[badges]
+maintenance = { status = "passively-developed" }
