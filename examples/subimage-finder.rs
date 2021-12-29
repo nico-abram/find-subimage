@@ -10,6 +10,8 @@ Flags:
 -threshold {f32}
 -pruning {prune_w f32} {prune_h f32}
 -step_xy {step_x usize} {step_y usize}
+-print {bool}
+-out {filename string}
 "#;
   println!("{}", HELP);
 }
@@ -21,6 +23,7 @@ fn main() {
   let mut threshold: Option<f32> = None;
   let mut pruning: Option<(f32, f32)> = None;
   let mut stepping: Option<(usize, usize)> = None;
+  let mut out_file: Option<std::ffi::OsString> = None;
 
   let mut i = 0;
   while i < args.len() {
@@ -102,6 +105,12 @@ fn main() {
           .to_str()
           .map(|threshold| threshold.parse::<f32>().unwrap());
       }
+      Some("-out") => {
+        out_file = Some(args[i + 1].clone());
+        args.remove(i);
+        args.remove(i);
+        continue;
+      }
       _ => {}
     }
 
@@ -157,20 +166,61 @@ fn main() {
     }
   }
 
-  let subimage = &image::open(subimage_path_os_str)
+  let subimage = image::open(subimage_path_os_str)
     .expect("Failed opening/parsing subimage file")
     .to_rgb8();
-  let search_image = &image::open(search_image_path_os_str)
+  let mut search_image = image::open(search_image_path_os_str)
     .expect("Failed opening/parsing search image file")
     .to_rgb8();
 
   let to_tuple: fn(&image::ImageBuffer<_, _>) -> (&Vec<u8>, usize, usize) =
     |img| (img.as_raw(), img.width() as usize, img.height() as usize);
 
-  let results = state.find_subimage_positions(to_tuple(subimage), to_tuple(search_image), 3);
-  println!("results: {:?}", results);
+  let results = state
+    .find_subimage_positions(to_tuple(&search_image), to_tuple(&subimage), 3)
+    .iter()
+    .cloned()
+    .collect::<Vec<_>>();
+  println!("results: {:?}", &results);
 
-  let results_as_grayscale =
-    state.find_subimage_positions_as_grayscale(to_tuple(subimage), to_tuple(search_image), 3, None);
+  let results_as_grayscale = state.find_subimage_positions_as_grayscale(
+    to_tuple(&search_image),
+    to_tuple(&subimage),
+    3,
+    None,
+  );
   println!("results: {:?}", results_as_grayscale);
+
+  if let Some(out_file) = out_file {
+    if let Some((x, y, _)) = results.get(0) {
+      let (x, y) = (*x as u32, *y as u32);
+      let (w, h) = (subimage.width(), subimage.height());
+
+      let (off_x, off_y) = (0, 0);
+
+      let border_col = image::Rgb([255, 0, 0]);
+
+      for off_x in 0..2 {
+        for off_y in 0..h {
+          *search_image.get_pixel_mut(x + off_x, y + off_y) = border_col;
+        }
+      }
+      for off_y in 0..2 {
+        for off_x in 0..w {
+          *search_image.get_pixel_mut(x + off_x, y + off_y) = border_col;
+        }
+      }
+      for off_x in 0..2 {
+        for off_y in 0..(h + 1) {
+          *search_image.get_pixel_mut(x + off_x + w, y + off_y) = border_col;
+        }
+      }
+      for off_y in 0..2 {
+        for off_x in 0..(w + 1) {
+          *search_image.get_pixel_mut(x + off_x, y + off_y + h) = border_col;
+        }
+      }
+      search_image.save(out_file).unwrap();
+    }
+  }
 }
