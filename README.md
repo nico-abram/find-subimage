@@ -31,12 +31,7 @@ let positions: &[(usize, usize, f32)] =
 let max: Option<&(usize, usize, f32)> = positions
     .iter()
     .min_by(|(_, _, dist), (_, _, dist2)| dist.partial_cmp(dist2).unwrap());
-println!(
-    "The subimage was found at position {:?}",
-    positions
-        .iter()
-        .min_by(|(_, _, dist), (_, _, dist2)| dist.partial_cmp(dist2).unwrap())
-);
+println!("The subimage was found at position {:?}", &max);
 assert_eq!(Some((50, 0)), max.map(|max| (max.0, max.1)));
 // find_subimage_positions actually returns the results sorted by distance already,
 // so we can skip finding the minimum
