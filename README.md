@@ -40,7 +40,7 @@ assert_eq!(Some((50, 0)), positions.get(0).map(|max| (max.0, max.1)));
 
 Additional documentation can be found in the generated [rustdoc docs hosted on docs.rs](https://docs.rs/find-subimage/latest/find_subimage/).
 
-Here's an example of finding a subimage with this crate:
+Here's an example of what can be done using this crate:
 
 Our search image:
 
