@@ -10,4 +10,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           toolchain: stable
-          args: --all-features
+#          args: --all-features
