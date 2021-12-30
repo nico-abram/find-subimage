@@ -66,3 +66,7 @@ The code in this repository is available under any of the following licenses, at
 This crate optionally depends on [opencv](https://opencv.org/). You can find it's license [here](https://opencv.org/license/) (3-clause BSD or Apache 2 depending on the version). The rust bindings are [licensed as MIT](https://github.com/twistedfall/opencv-rust/blob/master/LICENSE).
 
 It also optionally depends on [simdeez](https://github.com/jackmott/simdeez) which is licensed as [MIT](https://github.com/jackmott/simdeez/blob/master/LICENSE).
+
+## Running tests
+
+I recommend running the tests in release mode.
