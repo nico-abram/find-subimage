@@ -73,24 +73,25 @@ impl<'a, T: AsRef<[u8]>, A: Into<usize>, B: Into<usize>> From<(&'a T, A, B)> for
     }
 }
 
-/// The main context struct. This stores the necessary buffers for the search, eters.
+/// The main context struct. This stores the necessary buffers for the search and grayscale
+/// conversion.
 ///
 /// u8 buffers are used if conversion to grayscale is necessary, and f32 buffers for the backends
 /// that require them.
 ///
 /// There is also a Vec<(usize, usize, f32)> used to store results.
 pub struct SubImageFinderState {
-    positions_buffer: Vec<(usize, usize, f32)>,
-    backend: Backend,
+    pub positions_buffer: Vec<(usize, usize, f32)>,
+    pub backend: Backend,
 
-    prune_width_scale: f32,
-    prune_height_scale: f32,
+    pub prune_width_scale: f32,
+    pub prune_height_scale: f32,
 
-    f32buf_search_image: Vec<f32>,
-    f32buf_subimage: Vec<f32>,
+    pub f32buf_search_image: Vec<f32>,
+    pub f32buf_subimage: Vec<f32>,
 
-    u8buf_search_image: Vec<u8>,
-    u8buf_subimage: Vec<u8>,
+    pub u8buf_search_image: Vec<u8>,
+    pub u8buf_subimage: Vec<u8>,
 }
 
 /// The backend/algorithm to use.
@@ -622,6 +623,12 @@ impl SubImageFinderState {
     /// ```
     pub fn most_recent_results_mut(&mut self) -> &mut [(usize, usize, f32)] {
         &mut self.positions_buffer
+    }
+
+    /// If for some reason you need an owned Vec of the results, you can
+    /// use this function to avoid a copy and take ownership of the internal buffer.
+    pub fn take_results_buffer(&mut self) -> Vec<(usize, usize, f32)> {
+        std::mem::take(&mut self.positions_buffer)
     }
 }
 

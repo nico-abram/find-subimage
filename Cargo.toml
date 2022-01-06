@@ -25,6 +25,8 @@ simdeez-default-new = []
 checked-simdeez = []
 docs-only = ["opencv/docs-only"]
 
+[workspace]
+
 # For examples
 [dev-dependencies]
 image = "0.23"

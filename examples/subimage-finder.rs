@@ -138,8 +138,7 @@ fn parse_args() -> (
             Some("-backend") => {
                 let backend_str = args[i + 1].clone();
                 args.remove(i);
-                args.remove(i + 1);
-                i += 1;
+                args.remove(i);
                 backend = Some(match backend_str.to_str() {
                     #[cfg(feature = "simdeez")]
                     Some("runtime_simd") => Backend::RuntimeDetectedSimd {
@@ -170,9 +169,8 @@ fn parse_args() -> (
                 let prune_w_str = args[i + 1].clone();
                 let prune_h_str = args[i + 2].clone();
                 args.remove(i);
-                args.remove(i + 1);
-                args.remove(i + 2);
-                i += 2;
+                args.remove(i);
+                args.remove(i);
                 pruning = Some((
                     prune_w_str
                         .to_str()
@@ -188,9 +186,8 @@ fn parse_args() -> (
                 let step_x_str = args[i + 1].clone();
                 let step_y_str = args[i + 2].clone();
                 args.remove(i);
-                args.remove(i + 1);
-                args.remove(i + 2);
-                i += 1;
+                args.remove(i);
+                args.remove(i);
                 stepping = Some((
                     step_x_str
                         .to_str()
@@ -205,8 +202,7 @@ fn parse_args() -> (
             Some("-threshold") => {
                 let threshold_str = args[i + 1].clone();
                 args.remove(i);
-                args.remove(i + 1);
-                i += 1;
+                args.remove(i);
                 threshold = threshold_str
                     .to_str()
                     .map(|threshold| threshold.parse::<f32>().unwrap());
@@ -215,12 +211,11 @@ fn parse_args() -> (
                 out_file = Some(args[i + 1].clone());
                 args.remove(i);
                 args.remove(i);
-                continue;
             }
-            _ => {}
+            _ => {
+                i += 1;
+            }
         }
-
-        i += 1;
     }
 
     if args.len() != 2 {
