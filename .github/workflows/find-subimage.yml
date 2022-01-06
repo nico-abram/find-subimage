@@ -120,5 +120,8 @@ jobs:
           toolchain: stable
           default: true
 
+      - name: test
+        run: sudo apt-get install -y libclang-dev
+
       - name: Build docs
         run: cargo doc -vv --features=docs-only
