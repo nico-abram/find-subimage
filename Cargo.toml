@@ -13,7 +13,7 @@ categories = ["algorithms", "graphics", "multimedia::images", "multimedia"]
 include = ["/src", "/examples", "LICENSE"]
 
 [dependencies]
-opencv = { version = "0.61", optional = true }
+opencv = { version = "0.69", optional = true }
 simdeez = { version = "1.0.7", optional = true }
 
 [features]
